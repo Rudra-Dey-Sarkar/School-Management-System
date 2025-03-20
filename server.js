@@ -23,31 +23,55 @@ app.use(express.urlencoded({ extended: false }));
 // Establish database connection
 ConnectDB();
 
+// Haversine formula to calculate distance
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const toRad = (value) => (value * Math.PI) / 180;
+    const R = 6371;
+
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
+};
+
 //Route to check if the server is working
 app.get("/", (req, res) => {
     res.json("Working");
 })
 
 // Route to view all schools
-app.put("/tasks/:id", async (req, res) => {
-    const { id } = req.params;
-    const { ...allData } = req.body;
+app.get("/listSchools/:latitude/:longitude", async (req, res) => {
+    const { latitude, longitude } = req.params;
+    if (!latitude || !longitude) {
+        return res.status(400).json({ error: "Latitude and longitude are required." });
+    } else {
+        try {
+            const userLat = parseFloat(latitude);
+            const userLon = parseFloat(longitude);
 
-    try {
-        const response = await tasksSchemaModel.findOneAndUpdate(
-            { _id: id },
-            { $set: allData },
-            { new: true }
-        );
+            const response = await schoolsSchemaModel.find();
+            if (response !== null) {
+                const schoolsWithDistance = response.map((school) => ({
+                    ...school.toObject(),
+                    distance: calculateDistance(userLat, userLon, school.latitude, school.longitude)
+                }));
 
-        if (response !== null) {
-            res.status(200).json(response);
-        } else {
-            res.status(400).json("Task could not edit");
+                // Sort schools by distance
+                schoolsWithDistance.sort((a, b) => a.distance - b.distance);
+                res.json(schoolsWithDistance[0]); // Return only the nearest school
+
+            } else {
+                res.status(400).json("Schools not available");
+            }
+        } catch (error) {
+            console.log("Internal server error due to :-", error);
+            res.status(500).json("Internal server error");
         }
-    } catch (error) {
-        console.log("Internal server error due to :-", error);
-        res.status(500).json("Internal server error");
     }
 })
 
