@@ -2,7 +2,7 @@
 1. Node.js
 2. MongoDB Atlas
 
-## Please Note 
+## Please Note :-
 Used MongoDB because I'm comfortable wtih the MongoDB and another reason for
 not using MySQL is that most of the MySQL live deployment platform requires paid plans and need to enter Credit card details and rest of the platform is not that good. 
 
