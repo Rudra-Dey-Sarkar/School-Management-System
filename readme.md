@@ -8,9 +8,9 @@ not using MySQL is that most of the MySQL live deployment platform requires paid
 
 
 ## Links
-Deployed Application Link :- https://github.com/Rudra-Dey-Sarkar/School-Management-System
+Deployed Application Link :- https://school-management-system-kohl-phi.vercel.app
 
-Github Link :- https://github.com/Rudra-Dey-Sarkar/mini-job-board
+Github Link :- https://github.com/Rudra-Dey-Sarkar/School-Management-System
 
 
 ## Contacts
