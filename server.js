@@ -50,6 +50,7 @@ app.put("/tasks/:id", async (req, res) => {
         res.status(500).json("Internal server error");
     }
 })
+
 // Route to add new schools
 app.post("/addSchool", async (req, res) => {
     const { name, address, latitude, longitude } = req.body;
