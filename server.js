@@ -60,10 +60,11 @@ app.get("/listSchools/:latitude/:longitude", async (req, res) => {
                     ...school.toObject(),
                     distance: calculateDistance(userLat, userLon, school.latitude, school.longitude)
                 }));
-                
-                //Find and returns nearby schools under 10km
-                const nearbySchools = schoolsWithDistance.filter(school => school.distance <= 10);
+
+                // Find schools under 500km and return
+                const nearbySchools = schoolsWithDistance.filter(school => school.distance <= 500);
                 res.json(nearbySchools);
+                
 
             } else {
                 res.status(400).json("Schools not available");
